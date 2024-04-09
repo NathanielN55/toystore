@@ -17,6 +17,24 @@
 	 		  Retrieve info about toy from the db using provided PDO connection
 	 */
 
+	function get_toy_manuf(PDO $pdo, string $id) {
+
+		// SQL query to retrieve toy information based on the toy ID
+		$sql = "SELECT toy.name AS toyname, imgSrc, description, price, agerange, numinstock,
+			manuf.name AS manufname, Street, City, State, ZipCode, phone, contact
+			FROM toy, manuf
+			WHERE toynum= :id AND toy.toynum = manuf.manid;";	  // :id is a placeholder for value provided later 
+		                               // It's a parameterized query that helps prevent SQL injection attacks and ensures safer interaction with the database.
+
+
+		// Execute the SQL query using the pdo function and fetch the result
+		$toy = pdo($pdo, $sql, ['id' => $id])->fetch();		// Associative array where 'id' is the key and $id is the value. Used to bind the value of $id to the placeholder :id in  SQL query.
+
+		// Return the toy information (associative array)
+		return $toy;
+	}
+
+	$toyinfo = get_toy_manuf($pdo, $toy_id);
 
 // Closing PHP tag  ?> 
 
@@ -64,45 +82,45 @@
 			<div class="toy-details-container">
 				<div class="toy-image">
 					<!-- Display image of toy with its name as alt text -->
-					<img src="<?= '' ?>" alt="<?= '' ?>">
+					<img src="<?= $toyinfo['imgSrc'] ?>" alt="<?= $toyinfo['toyname'] ?>">
 				</div>
 
 				<div class="toy-details">
 
 					<!-- Display name of toy -->
-			        <h1><?= '' ?></h1>
+			        <h1><?= $toyinfo['toyname'] ?></h1>
 
 			        <hr />
 
 			        <h3>Toy Information</h3>
 
 			        <!-- Display description of toy -->
-			        <p><strong>Description:</strong> <?= '' ?></p>
+			        <p><strong>Description:</strong> <?= $toyinfo['description'] ?></p>
 
 			        <!-- Display price of toy -->
-			        <p><strong>Price:</strong> $ <?= '' ?></p>
+			        <p><strong>Price:</strong> $ <?= $toyinfo['price'] ?></p>
 
 			        <!-- Display age range of toy -->
-			        <p><strong>Age Range:</strong> <?= '' ?></p>
+			        <p><strong>Age Range:</strong> <?= $toyinfo['agerange'] ?></p>
 
 			        <!-- Display stock of toy -->
-			        <p><strong>Number In Stock:</strong> <?= '' ?></p>
+			        <p><strong>Number In Stock:</strong> <?= $toyinfo['numinstock'] ?></p>
 
 			        <br />
 
 			        <h3>Manufacturer Information</h3>
 
 			        <!-- Display name of manufacturer -->
-			        <p><strong>Name:</strong> <?= '' ?> </p>
+			        <p><strong>Name:</strong> <?= $toyinfo['manufname'] ?> </p>
 
 			        <!-- Display address of manufacturer -->
-			        <p><strong>Address:</strong> <?= '' ?></p>
+			        <p><strong>Address:</strong> <?= $toyinfo['Street'], ", ", $toyinfo['City'], ", ", $toyinfo['State'], " ", $toyinfo['ZipCode'] ?></p>
 
 			        <!-- Display phone of manufacturer -->
-			        <p><strong>Phone:</strong> <?= '' ?></p>
+			        <p><strong>Phone:</strong> <?= $toyinfo['phone'] ?></p>
 
 			        <!-- Display contact of manufacturer -->
-			        <p><strong>Contact:</strong> <?= '' ?></p>
+			        <p><strong>Contact:</strong> <?= $toyinfo['contact'] ?></p>
 			    </div>
 			</div>
 		</main>
